@@ -1,37 +1,51 @@
 # Resume Review Engine
 
-A web-based application for analyzing and rewriting full resume text with structured feedback.
+A web-based application that analyzes and rewrites full resume text while providing structured explanations for suggested improvements.
+
+The system is designed to support **iterative resume refinement**, helping users improve clarity, wording, and structure rather than blindly replacing their content.
 
 ---
 
 ## Overview
 
-This project allows users to submit complete resume content and receive:
+Users can submit complete resume sections and receive:
 
-- a revised version with improved clarity and wording
-- an explanation outlining the changes made
+* a rewritten version with improved clarity and phrasing
+* a structured explanation describing why changes were made
 
-The system is designed to support iterative resume improvement through clear, readable output.
+The goal is to make resume feedback understandable and actionable, not opaque or one-click generated.
 
 ---
 
-## Features
+## Core Features
 
-- Full resume rewrite generation
-- Explanations for wording and structural changes
-- Side-by-side comparison of original and revised content
-- Local history tracking for previous submissions
-- Minimal interface focused on usability
+* Full resume rewrite generation
+* Clear explanations for wording and structural changes
+* Side-by-side comparison of original and revised content
+* Local history tracking for previous rewrites
+* Minimal, focused interface designed for usability
+
+---
+
+## Screenshots
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/f0759063-a329-46c6-b10c-0de36a189448" width="800" />
+</p>
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/25b5ec62-a177-4823-ab0c-589ff007053b" width="800" />
+</p>
 
 ---
 
 ## Tech Stack
 
-- Next.js (App Router)
-- TypeScript
-- React
-- Tailwind CSS
-- Hugging Face Inference API
+* Next.js (App Router)
+* TypeScript
+* React
+* Tailwind CSS
+* Hugging Face Inference API
 
 ---
 
@@ -43,20 +57,21 @@ app/
   components/       UI components
 lib/                Prompts and shared utilities
 ```
+
 ---
 
 ## Design Notes
 
-- Rewrites and explanations are generated separately to keep reasoning clear.
-- The system prioritizes clarity, specificity, and stronger phrasing.
-- Output is intended to support revision, not replace user judgment.
+* Resume rewrites and explanations are generated separately to preserve clarity.
+* Feedback prioritizes specificity, readability, and professional tone.
+* Output is intended to guide revision, not replace user judgment.
 
 ---
 
 ## Planned Improvements
 
-- More structured feedback categories
-- Stronger evaluation of impact and specificity
-- Improved formatting and section awareness
-- Optional scoring or categorization of resume strength
-- Backend persistence for saved resumes
+* More structured feedback categories
+* Stronger evaluation of impact and specificity
+* Improved section-aware formatting
+* Optional scoring or categorization of resume strength
+* Backend persistence for saved resumes
