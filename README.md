@@ -34,7 +34,7 @@ The goal is to make resume feedback understandable and actionable, not opaque or
 </p>
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/25b5ec62-a177-4823-ab0c-589ff007053b" width="800" />
+  <img src="https://github.com/user-attachments/assets/9554a67f-12e1-4a66-a49d-802105771f41" width="800" />
 </p>
 
 ---
