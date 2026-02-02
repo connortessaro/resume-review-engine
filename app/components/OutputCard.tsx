@@ -1,17 +1,17 @@
 'use client';
 
-import { AsyncState } from '@/lib/async-state';
+import { AsyncState } from '@/app/types/async-state';
 import { giveExplanation } from '../api/resume-actions';
 import { useRef, useState } from 'react';
-import { RewriteEntry } from '@/lib/rewrite-entry';
+import { StoredEntry } from '@/app/types/resume-types';
 import { useEffect } from 'react';
 
 interface OutputCardProps {
-  currEntry: RewriteEntry | undefined;
+  currEntry: StoredEntry | undefined;
   state: AsyncState;
   onState: (state: AsyncState) => void;
-  selectedHistoricalEntry: RewriteEntry | null;
-  onDeselectHistoricalEntry: (entry: RewriteEntry | null) => void;
+  selectedHistoricalEntry: StoredEntry | null;
+  onDeselectHistoricalEntry: (entry: StoredEntry | null) => void;
   onCreateExplanation: (e: string) => void;
 }
 
@@ -23,7 +23,7 @@ export default function OutputCard({
   onDeselectHistoricalEntry,
   onCreateExplanation,
 }: OutputCardProps) {
-  const prevResume = useRef<RewriteEntry | null>(null);
+  const prevResume = useRef<StoredEntry | null>(null);
   const [showOriginal, setShowOriginal] = useState(false);
 
   useEffect(() => {
@@ -33,7 +33,7 @@ export default function OutputCard({
     }
   }, [currEntry, onDeselectHistoricalEntry]);
 
-  const selectedEntry: RewriteEntry =
+  const selectedEntry: StoredEntry =
     selectedHistoricalEntry != null ? selectedHistoricalEntry : currEntry!;
   const explanation = selectedEntry?.explanation ?? '';
 

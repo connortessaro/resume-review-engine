@@ -1,20 +1,20 @@
-import { RewriteEntry } from '@/lib/rewrite-entry';
+import { StoredEntry } from '@/app/types/resume-types';
 import { useState, MouseEvent } from 'react';
 
 interface HistorySidebarProps {
-  history: RewriteEntry[];
-  onSelectHistoricalEntry: (entry: RewriteEntry) => void;
+  history: StoredEntry[];
+  onSelectHistoricalEntry: (entry: StoredEntry) => void;
 }
 
 export default function HistorySidebar({
   history,
   onSelectHistoricalEntry,
 }: HistorySidebarProps) {
-  const [selectedEntry, setSelectedEntry] = useState<RewriteEntry>();
+  const [selectedEntry, setSelectedEntry] = useState<StoredEntry>();
 
   const handleButtonClick = (
     e: MouseEvent<HTMLButtonElement>,
-    entry: RewriteEntry,
+    entry: StoredEntry,
   ) => {
     e.stopPropagation();
     setSelectedEntry(entry);

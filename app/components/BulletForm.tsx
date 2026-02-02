@@ -1,14 +1,14 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import { RewriteEntry } from '@/lib/rewrite-entry';
-import { AsyncState } from '@/lib/async-state';
+import { StoredEntry } from '@/app/types/resume-types';
+import { AsyncState } from '@/app/types/async-state';
 import ModeSelector from './ModeSelector';
 import { createResume } from '@/app/api/resume-actions';
 
 interface BulletFormProps {
   // Called when a new rewrite is successfully created
-  onCreateEntry: (entry: RewriteEntry) => void;
+  onCreateEntry: (entry: StoredEntry) => void;
   // Global async state for the form (idle/loading/error)
   state: AsyncState;
   onState: (state: AsyncState) => void;
@@ -33,7 +33,7 @@ export default function BulletForm({
     try {
       const result = await createResume(mode, text);
 
-      const entry: RewriteEntry = {
+      const entry: StoredEntry = {
         id: Date.now(),
         original: text,
         improved: result,

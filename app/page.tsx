@@ -4,12 +4,12 @@ import BulletForm from './components/BulletForm';
 import OutputCard from './components/OutputCard';
 import HistorySidebar from './components/HistorySidebar';
 import { useEffect, useState } from 'react';
-import { RewriteEntry } from '@/lib/rewrite-entry';
-import { AsyncState } from '@/lib/async-state';
+import { StoredEntry } from '@/app/types/resume-types';
+import { AsyncState } from '@/app/types/async-state';
 
 export default function Home() {
-  const [currEntry, setCurrEntry] = useState<RewriteEntry>();
-  const [history, setHistory] = useState<RewriteEntry[]>([]);
+  const [currEntry, setCurrEntry] = useState<StoredEntry>();
+  const [history, setHistory] = useState<StoredEntry[]>([]);
   const [bulletFormState, setBulletFormState] = useState<AsyncState>({
     type: 'idle',
   });
@@ -17,7 +17,7 @@ export default function Home() {
     type: 'idle',
   });
   const [selectedHistoricalEntry, setSelectedHistoricalEntry] =
-    useState<RewriteEntry | null>(null);
+    useState<StoredEntry | null>(null);
 
   const MAX_HISTORY_LENGTH = 10;
 
@@ -25,7 +25,7 @@ export default function Home() {
     // Initialize history and make the most recent entry the current one
     const storedHistory = localStorage.getItem('rewriteHistory');
     if (storedHistory) {
-      const parsedEntries: RewriteEntry[] = JSON.parse(storedHistory);
+      const parsedEntries: StoredEntry[] = JSON.parse(storedHistory);
       // eslint-disable-next-line
       setCurrEntry(parsedEntries?.at(0));
       setHistory(parsedEntries);
@@ -36,7 +36,7 @@ export default function Home() {
     localStorage.setItem('rewriteHistory', JSON.stringify(history));
   }, [history]);
 
-  function addEntry(entry: RewriteEntry) {
+  function addEntry(entry: StoredEntry) {
     setCurrEntry(entry);
     setHistory((prev) => {
       const next = [entry, ...prev];
