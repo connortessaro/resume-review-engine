@@ -21,7 +21,7 @@ export default function OutputCard({
   onState,
   selectedHistoricalEntry,
   onDeselectHistoricalEntry,
-  onCreateExplanation: addExplanation,
+  onCreateExplanation,
 }: OutputCardProps) {
   const prevResume = useRef<RewriteEntry | null>(null);
   const [showOriginal, setShowOriginal] = useState(false);
@@ -60,7 +60,7 @@ export default function OutputCard({
         selectedEntry.improved,
       );
       // Persist explanation onto the entry in page-level history
-      addExplanation(explanation);
+      onCreateExplanation(explanation);
       onState({ type: 'success' });
     } catch (error) {
       onState({

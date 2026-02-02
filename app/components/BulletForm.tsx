@@ -40,7 +40,7 @@ export default function BulletForm({
         mode,
         timestamp: new Date().toISOString(),
       };
-      
+
       onCreateEntry(entry);
       onState({ type: 'success' });
     } catch (err) {
