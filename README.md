@@ -1,36 +1,77 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Resume Review Engine
 
-## Getting Started
+A web-based application that analyzes and rewrites full resume text while providing structured explanations for suggested improvements.
 
-First, run the development server:
+The system is designed to support **iterative resume refinement**, helping users improve clarity, wording, and structure rather than blindly replacing their content.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+---
+
+## Overview
+
+Users can submit complete resume sections and receive:
+
+* a rewritten version with improved clarity and phrasing
+* a structured explanation describing why changes were made
+
+The goal is to make resume feedback understandable and actionable, not opaque or one-click generated.
+
+---
+
+## Core Features
+
+* Full resume rewrite generation
+* Clear explanations for wording and structural changes
+* Side-by-side comparison of original and revised content
+* Local history tracking for previous rewrites
+* Minimal, focused interface designed for usability
+
+---
+
+## Screenshots
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/f0759063-a329-46c6-b10c-0de36a189448" width="800" />
+</p>
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/9554a67f-12e1-4a66-a49d-802105771f41" width="800" />
+</p>
+
+---
+
+## Tech Stack
+
+* Next.js (App Router)
+* TypeScript
+* React
+* Tailwind CSS
+* Hugging Face Inference API
+
+---
+
+## Project Structure
+
+```text
+app/
+  api/              Server-side inference logic
+  components/       UI components
+lib/                Prompts and shared utilities
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Design Notes
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+* Resume rewrites and explanations are generated separately to preserve clarity.
+* Feedback prioritizes specificity, readability, and professional tone.
+* Output is intended to guide revision, not replace user judgment.
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## Planned Improvements
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+* More structured feedback categories
+* Stronger evaluation of impact and specificity
+* Improved section-aware formatting
+* Optional scoring or categorization of resume strength
+* Backend persistence for saved resumes
