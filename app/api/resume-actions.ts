@@ -1,7 +1,8 @@
 'use server';
 import { resumePrompt } from '@/lib/ai-prompts';
 import { analysisPrompt } from '@/lib/ai-prompts';
-import { rewriteParser } from '@/lib/rewrite-parser';
+import { toResumeParser } from '@/lib/text-to-resume-parser';
+import { Resume } from '@/app/types/resume-types';
 import { InferenceClient } from '@huggingface/inference';
 
 const client = new InferenceClient(process.env.HF_TOKEN);
@@ -34,10 +35,7 @@ export async function createResume(mode: string, resume: string) {
   }
 }
 
-export async function giveExplanation(oldResume: string, newResume: string) {
-  const parseOld  = rewriteParser(oldResume);
-  const parsedNew = rewriteParser(newResume);
-
+export async function giveExplanation(oldResume: Resume, newResume: Resume) {
   const prompt = analysisPrompt(parseOld, parsedNew);
 
   const chatCompletion = await client.chatCompletion({

@@ -1,13 +1,9 @@
 'use client';
 
-const MODES = [
-  { id: 'ats', label: 'ATS Optimized' },
-  { id: 'concise', label: 'Concise' },
-  { id: 'impact', label: 'Impact Focused' },
-];
+import { DEFAULT_MODE, RewriteMode } from '@/app/types/mode-types';
 
 interface ModeSelectorProps {
-  mode: string;
+  mode: rewriteMode;
   onChange: (mode: string) => void;
 }
 

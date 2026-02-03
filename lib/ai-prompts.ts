@@ -1,3 +1,5 @@
+import { Resume } from '@/app/types/resume-types'
+
 export function resumePrompt(mode: string, resume: string) {
   return `
 You are a professional resume rewriting assistant.
@@ -18,9 +20,9 @@ ${resume}
 `;
 }
 
-export function analysisPrompt(
-  oldResume: { header: string; content: string[] }[],
-  newResume: { header: string; content: string[] }[],
+export function analysisPrompt( // explanation
+  oldResume: Resume,
+  newResume: Resume,
 ) {
 
   const oldR = JSON.stringify(oldResume);
