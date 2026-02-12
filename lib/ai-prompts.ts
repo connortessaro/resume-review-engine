@@ -17,6 +17,21 @@ Rewrite the following resume in ${mode} style.
 
 Resume:
 ${resume}
+
+Return ONLY valid JSON.
+No commentary.
+Match this schema exactly. If something doesn't fit in a certain array then leave the array empty.
+export interface Resume {
+  header?: string[];
+  education?: string[];
+  summary?: string[];
+  experience?: string[];
+  projects?: string[];
+  skills?: string[];
+  certifications?: string[];
+  awards?: string[];
+}
+
 `;
 }
 

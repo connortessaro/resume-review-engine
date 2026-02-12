@@ -6,7 +6,7 @@ import { AsyncState } from '@/app/types/async-state';
 import ModeSelector from './ModeSelector';
 import { createResume } from '@/app/api/resume-actions';
 import { DEFAULT_MODE } from '@/app/types/mode-types';
-import { toResumeParser } from '@/lib/text-to-resume-parser';
+import { textToResumeParser } from '@/lib/text-to-resume-parser';
 
 interface BulletFormProps {
   // Called when a new rewrite is successfully created
@@ -31,18 +31,18 @@ export default function BulletForm({
     const text = textAreaRef.current.value.trim();
     if (!text) return; // prevent api call when no text
 
-    const originalParsed = toResumeParser(text);
+    const originalParsed = textToResumeParser(text);
 
     onState({ type: 'loading' });
     try {
-      const result = await createResume(mode, text);
+      const llmOutput = await createResume(mode, text);
 
-      const improvedParsed = toResumeParser(result);
+      const parsedLlmOutput = textToResumeParser(llmOutput);
 
       const entry: StoredEntry = {
         id: Date.now(),
         original: originalParsed,
-        improved: improvedParsed,
+        improved: parsedLlmOutput,
         mode,
         timestamp: new Date().toISOString(),
       };

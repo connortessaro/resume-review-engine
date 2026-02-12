@@ -60,7 +60,7 @@ export interface StoredEntry {
   explanation?: Explanation;
 }
 
-const RESUME_SECTIONS = [
+export const RESUME_SECTIONS = [
   'header',
   'summary',
   'contact',
@@ -81,13 +81,44 @@ export type ResumeSection = (typeof RESUME_SECTIONS)[number];
 export const RESUME_SECTION_SET = new Set(RESUME_SECTIONS);
 
 // leave as string[] because parsing inputted text
-export interface Resume {
-  header?: string[];
-  education?: string[];
+interface Resume {
+  header?: Header;
+  education?: Education;
   summary?: string[];
-  experience?: string[];
-  projects?: string[];
+  experience?: Experience;
+  projects?: Projects
   skills?: string[];
   certifications?: string[];
   awards?: string[];
+}
+
+interface Header {
+  fullName: string;
+  email: string;
+  phoneNumber: string;
+  githubLink: string;
+  linkedinLink: string;
+}
+
+interface Education {
+  university: string;
+  graduationMonth: string;
+  graduationYear: string;
+  major: string;
+  gpa: string;
+  relevantCoursework: string;
+}
+
+interface Experience {
+  companyName: string;
+  role: string;
+  location: string
+  bulletPoints: string[];
+  duration: string;
+}
+
+
+// TODO: Finish interfaces for Resume object
+interface Projects {
+  projectName: string
 }

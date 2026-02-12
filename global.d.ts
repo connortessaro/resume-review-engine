@@ -1,1 +1,1 @@
-declare module "*.css"; // Declare CSS module typesw
+declare module "*.css"; // Declare CSS module types

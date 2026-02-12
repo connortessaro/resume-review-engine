@@ -1,6 +1,10 @@
-import { Resume, RESUME_SECTION_SET, ResumeSection } from '@/app/types/resume-types';
+import {
+  Resume,
+  RESUME_SECTION_SET,
+  ResumeSection,
+} from '@/app/types/resume-types';
 
-export function toResumeParser(resume: string): Resume {
+export function textToResumeParser(resume: string): Resume {
   const lines = resume.split(/\r?\n/);
   let currPart: { section: string; content: string[] } | null = null;
   const parsed: Resume = {};
@@ -20,7 +24,7 @@ export function toResumeParser(resume: string): Resume {
       currPart.content.push(line);
     }
   }
-  
+
   return parsed;
 }
 
@@ -30,7 +34,7 @@ function isSection(line: string): boolean {
     .replace(/[:–—-]/g, '')
     .trim();
 
-  if (normalized) {
+  if (RESUME_SECTION_SET.has(normalized as ResumeSection)) {
     return true;
   }
   return false;

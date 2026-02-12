@@ -21,6 +21,8 @@ export default function HistorySidebar({
     onSelectHistoricalEntry(entry);
   };
 
+  // TODO: Line 45 create ai header 
+
   return (
     <div className="flex h-full flex-col gap-3">
       <div className="flex items-center justify-between px-1">

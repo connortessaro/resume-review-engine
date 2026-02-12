@@ -37,6 +37,9 @@ export default function OutputCard({
     selectedHistoricalEntry != null ? selectedHistoricalEntry : currEntry!;
   const explanation = selectedEntry?.explanation ?? '';
 
+  const improved = selectedEntry.improved;
+  const original = selectedEntry.original;
+
   if (!currEntry && !selectedHistoricalEntry) {
     return (
       <section className="rounded-xl border border-dashed border-white/15 bg-black/20 p-4 text-sm text-gray-500 backdrop-blur-sm">
@@ -75,7 +78,9 @@ export default function OutputCard({
 
   async function handleCopyImproved() {
     try {
-      await navigator.clipboard.writeText(selectedEntry.improved);
+      await navigator.clipboard.writeText(
+        JSON.stringify(selectedEntry.improved),
+      );
     } catch {
       // swallow copy errors silently
     }
@@ -101,9 +106,9 @@ export default function OutputCard({
             Copy
           </button>
         </div>
-        <pre className="max-h-[260px] overflow-auto text-xs whitespace-pre-wrap text-sky-50">
-          {selectedEntry.improved}
-        </pre>
+        <div className="max-h-[260px] overflow-auto text-xs whitespace-pre-wrap text-sky-50">
+          <h2>{improved.header}</h2>
+        </div>
       </div>
       {/* toggle + collapsible original */}
       <button
@@ -119,9 +124,42 @@ export default function OutputCard({
           <h3 className="text-[0.7rem] font-semibold tracking-[0.16em] text-gray-400 uppercase">
             Original
           </h3>
-          <pre className="max-h-[220px] overflow-auto text-xs whitespace-pre-wrap text-gray-200">
-            {selectedEntry.original}
-          </pre>
+          <article className="max-h-[220px] overflow-auto text-xs whitespace-pre-wrap text-gray-200">
+            <section>
+              <h2>{original.header}</h2>
+              <div></div>
+            </section>
+
+            <section>
+              <h2>Education</h2>
+              <p>{original.education}</p>
+            </section>
+
+            <section>
+              <h2>Skills</h2>
+              <p>{original.skills}</p>
+              <h2>Certifications / Awards</h2>
+              <p>{original.certifications}</p>
+              <p>{original.awards}</p>
+            </section>
+
+            <section>
+              <h2>Summary</h2>
+              <p>{original.summary}</p>
+            </section>
+
+            <section>
+              <h2>Experience</h2>
+              {original.experience?.map()}
+              
+              {/* map through work experiences */}
+            </section>
+
+            <section>
+              <h2>Projects</h2>
+              {/* map through projects */}
+            </section>
+          </article>
         </div>
       )}
       {state.type === 'loading' ? (
@@ -153,9 +191,9 @@ export default function OutputCard({
           <h3 className="text-[0.7rem] font-semibold tracking-[0.16em] text-emerald-300 uppercase">
             Explanation
           </h3>
-          <pre className="max-h-[220px] overflow-auto text-xs whitespace-pre-wrap text-emerald-50">
-            {explanation}
-          </pre>
+          <div className="max-h-[220px] overflow-auto text-xs whitespace-pre-wrap text-emerald-50">
+            <h2>explanation</h2>
+          </div>
         </div>
       )}
     </section>

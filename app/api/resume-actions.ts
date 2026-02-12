@@ -1,7 +1,7 @@
 'use server';
 import { resumePrompt } from '@/lib/ai-prompts';
 import { analysisPrompt } from '@/lib/ai-prompts';
-import { toResumeParser } from '@/lib/text-to-resume-parser';
+import { textToResumeParser } from '@/lib/text-to-resume-parser';
 import { Resume } from '@/app/types/resume-types';
 import { InferenceClient } from '@huggingface/inference';
 
@@ -12,7 +12,10 @@ export async function createResume(mode: string, resume: string) {
     if (resume.trim().length < 15) {
       throw new Error('Input is too short.');
     }
-    const prompt = resumePrompt(mode, resume);
+
+    const userInputtedResume = JSON.stringify(textToResumeParser(resume), null, 2);
+
+    const prompt = resumePrompt(mode, userInputtedResume);
 
     const chatCompletion = await client.chatCompletion({
       model: 'meta-llama/Llama-3.2-1B-Instruct',
@@ -35,8 +38,8 @@ export async function createResume(mode: string, resume: string) {
   }
 }
 
-export async function giveExplanation(oldResume: Resume, newResume: Resume) {
-  const prompt = analysisPrompt(parseOld, parsedNew);
+export async function giveExplanation(parsedOld: Resume, parsedNew: Resume) {
+  const prompt = analysisPrompt(parsedOld, parsedNew);
 
   const chatCompletion = await client.chatCompletion({
     model: 'meta-llama/Llama-3.2-1B-Instruct',
