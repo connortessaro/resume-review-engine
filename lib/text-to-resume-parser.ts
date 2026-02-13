@@ -1,41 +1,56 @@
 import {
   Resume,
-  RESUME_SECTION_SET,
   ResumeSection,
+  Header,
+  Education,
+  Experience,
+  Project,
+  Cert
+
 } from '@/app/types/resume-types';
 
+const SECTION_PATTERNS = {
+  header: /linkedin|github|/i,
+  education: /university|degree|college|education/i,
+  summary: /about me|summary|about me/i,
+  experience: /experience|work experience| professional experience/i,
+  projects: /projects|side projects|personal projects/i,
+  skills: /skills|technologies|languages|tools/i,
+  certifications: /certifications|cert/i
+};
+
 export function textToResumeParser(resume: string): Resume {
-  const lines = resume.split(/\r?\n/);
-  let currPart: { section: string; content: string[] } | null = null;
-  const parsed: Resume = {};
-
-  for (const line of lines) {
-    if (isSection(line)) {
-      if (currPart != null) {
-        parsed[line as keyof Resume] = currPart.content;
-        currPart = { section: line, content: [] };
-        continue;
-      } else {
-        currPart = { section: line, content: [] };
-      }
-    }
-
-    if (currPart != null) {
-      currPart.content.push(line);
-    }
-  }
-
-  return parsed;
+  // iterate through text in resume if section
+  // then we will see what specific functions to use
+  // unknownSections?: string[];
 }
 
-function isSection(line: string): boolean {
+//TODO: create helper functions for section patterns
+
+function isSection(line: string) {
   const normalized = line
     .toLowerCase()
     .replace(/[:–—-]/g, '')
     .trim();
 
-  if (RESUME_SECTION_SET.has(normalized as ResumeSection)) {
-    return true;
+  if (SECTION_PATTERNS.certifications.test(normalized)) {
+    return {} as Header;
+  } 
+
+  if (SECTION_PATTERNS.education.test(normalized)) {
+    return {} as Education
   }
-  return false;
+
+  if (SECTION_PATTERNS.experience.test(normalized)) {
+    return {} as Experience
+  }
+
+  if (SECTION_PATTERNS.header.test(normalized)) {
+    return {} as Header
+  }
+
+  if (SECTION_PATTERNS.projects.test(normalized)) {
+    return {} as Project
+  }
+  
 }
