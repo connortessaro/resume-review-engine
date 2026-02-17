@@ -32,6 +32,7 @@ export interface Resume {
   projects?: Project[];
   skills?: Skills;
   certifications?: Cert[];
+  unknown?: string[];
 }
 
 export interface Header {
