@@ -77,16 +77,17 @@ export function textToResumeParser(resume: string): Resume {
         experienceParser(normalized, parsedExperiences);
       if (curSection == 'projects') projectParser(normalized, parsedProjects);
     } else if (curSection == null && newSection == null) {
-    unknownTextParser(normalized, parsedUnknown);
+      unknownTextParser(normalized, parsedUnknown);
     } else if (
       curSection != null &&
       newSection != null &&
       curSection != newSection
     ) {
       curSection = newSection;
-  }
+    }
 
-  return parsedResume;
+    return parsedResume;
+  }
 }
 
 function getSection(line: string): ResumeSection | null {
@@ -183,13 +184,19 @@ function educationParser(line: string, education: Education): boolean {
     consumed = true;
   }
 
-  if (/major|field of study|concentration|b\.?s\.?|bachelor|m\.?s\.?|master/i.test(line)) {
+  if (
+    /major|field of study|concentration|b\.?s\.?|bachelor|m\.?s\.?|master/i.test(
+      line,
+    )
+  ) {
     education.major = line;
     consumed = true;
   }
 
   if (/coursework|courses|relevant coursework/i.test(line)) {
-    const value = line.includes(':') ? line.split(':').slice(1).join(':') : line;
+    const value = line.includes(':')
+      ? line.split(':').slice(1).join(':')
+      : line;
     education.relevantCoursework = value
       .split(/,|;/)
       .map((course) => course.trim())
@@ -208,7 +215,12 @@ function experienceParser(
   const content = stripBulletPrefix(line);
   const isBullet = content !== line;
   const dateValue = extractDateValue(line);
-  if (!isBullet && dateValue != null && current != null && isPopulated(current)) {
+  if (
+    !isBullet &&
+    dateValue != null &&
+    current != null &&
+    isPopulated(current)
+  ) {
     experiences.push(current);
     current = null;
   }
@@ -225,7 +237,10 @@ function experienceParser(
   }
 
   const cleanedLine = dateValue
-    ? line.replace(dateValue, '').replace(/\s{2,}/g, ' ').trim()
+    ? line
+        .replace(dateValue, '')
+        .replace(/\s{2,}/g, ' ')
+        .trim()
     : line;
   const parts = splitCompositeLine(cleanedLine);
 
@@ -285,7 +300,10 @@ function projectParser(
   const parts = splitCompositeLine(cleanedLine);
 
   if (parts.length > 0 && !current.projectName) current.projectName = parts[0];
-  if (/tech|stack|built with|using/i.test(cleanedLine) && !current.technologies) {
+  if (
+    /tech|stack|built with|using/i.test(cleanedLine) &&
+    !current.technologies
+  ) {
     const value = cleanedLine.includes(':')
       ? cleanedLine.split(':').slice(1).join(':').trim()
       : cleanedLine;
