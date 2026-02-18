@@ -64,30 +64,88 @@ export function textToResumeParser(resume: string): Resume {
     if (line == undefined) continue;
 
     const normalized = line.trim();
+    if (normalized.length === 0) continue;
 
-    if (curSection == null && newSection != null) {
+    const newSection = getSection(normalized);
+    if (newSection != null) {
+      if (curSection === 'experience') {
+        currentExperience = pushCurrentIfPopulated(
+          parsedExperiences,
+          currentExperience,
+        );
+      }
+      if (curSection === 'projects') {
+        currentProject = pushCurrentIfPopulated(parsedProjects, currentProject);
+      }
+      if (curSection === 'certifications') {
+        currentCert = pushCurrentIfPopulated(parsedCerts, currentCert);
+      }
       curSection = newSection;
-    } else if (curSection != null && newSection == null) {
-      if (curSection == 'header') headerParser(normalized, parsedHeader);
-      if (curSection == 'certifications')
-        certificationParser(normalized, parsedCerts);
-      if (curSection == 'education')
-        educationParser(normalized, parsedEducation);
-      if (curSection == 'experience')
-        experienceParser(normalized, parsedExperiences);
-      if (curSection == 'projects') projectParser(normalized, parsedProjects);
-    } else if (curSection == null && newSection == null) {
-      unknownTextParser(normalized, parsedUnknown);
-    } else if (
-      curSection != null &&
-      newSection != null &&
-      curSection != newSection
-    ) {
-      curSection = newSection;
+      continue;
     }
 
-    return parsedResume;
+    if (curSection == null) {
+      const consumedAsHeader = headerParser(normalized, parsedHeader);
+      if (!consumedAsHeader) unknownTextParser(normalized, parsedUnknown);
+      continue;
+    }
+
+    if (curSection === 'header') {
+      const consumedAsHeader = headerParser(normalized, parsedHeader);
+      if (!consumedAsHeader) unknownTextParser(normalized, parsedUnknown);
+      continue;
+    }
+
+    if (curSection === 'summary') {
+      parsedSummaryLines.push(normalized);
+      continue;
+    }
+
+    if (curSection === 'skills') {
+      skillsParser(normalized, parsedSkills);
+      continue;
+    }
+
+    if (curSection === 'education') {
+      const consumedAsEducation = educationParser(normalized, parsedEducation);
+      if (!consumedAsEducation) unknownTextParser(normalized, parsedUnknown);
+      continue;
+    }
+
+    if (curSection === 'experience') {
+      currentExperience = experienceParser(
+        normalized,
+        parsedExperiences,
+        currentExperience,
+      );
+      continue;
+    }
+
+    if (curSection === 'projects') {
+      currentProject = projectParser(normalized, parsedProjects, currentProject);
+      continue;
+    }
+
+    if (curSection === 'certifications') {
+      currentCert = certificationParser(normalized, parsedCerts, currentCert);
+      continue;
+    }
+
+    unknownTextParser(normalized, parsedUnknown);
   }
+
+  currentExperience = pushCurrentIfPopulated(parsedExperiences, currentExperience);
+  currentProject = pushCurrentIfPopulated(parsedProjects, currentProject);
+  currentCert = pushCurrentIfPopulated(parsedCerts, currentCert);
+
+  if (parsedSummaryLines.length > 0) {
+    parsedResume.summary = parsedSummaryLines.join(' ');
+  }
+  if (!isSkillsPopulated(parsedSkills)) {
+    delete parsedResume.skills;
+  }
+
+  return parsedResume;
 }
 
 function getSection(line: string): ResumeSection | null {
