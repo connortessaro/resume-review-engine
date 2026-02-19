@@ -122,7 +122,11 @@ export function textToResumeParser(resume: string): Resume {
     }
 
     if (curSection === 'projects') {
-      currentProject = projectParser(normalized, parsedProjects, currentProject);
+      currentProject = projectParser(
+        normalized,
+        parsedProjects,
+        currentProject,
+      );
       continue;
     }
 
@@ -134,7 +138,10 @@ export function textToResumeParser(resume: string): Resume {
     unknownTextParser(normalized, parsedUnknown);
   }
 
-  currentExperience = pushCurrentIfPopulated(parsedExperiences, currentExperience);
+  currentExperience = pushCurrentIfPopulated(
+    parsedExperiences,
+    currentExperience,
+  );
   currentProject = pushCurrentIfPopulated(parsedProjects, currentProject);
   currentCert = pushCurrentIfPopulated(parsedCerts, currentCert);
 
@@ -450,7 +457,7 @@ function splitCompositeLine(line: string): string[] {
 }
 
 function cleanToken(value: string): string {
-  return value.trim().replace(/^[-–—,|]+|[-–—,|]+$/g, '');
+  return value.trim().replace(/^[-–—,|]+|[-–—,|]+$/g, '').trim();
 }
 
 function pushBulletPoint(

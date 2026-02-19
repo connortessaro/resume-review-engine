@@ -1,5 +1,4 @@
 import { RewriteMode } from '@/app/types/mode-types';
-import { Explanation } from '@/app/types/explanation-types'
 
 export interface StoredEntry {
   id: number;
@@ -7,7 +6,7 @@ export interface StoredEntry {
   improved: Resume;
   mode: RewriteMode;
   timestamp: string;
-  explanation?: Explanation;
+  explanation?: string;
 }
 
 export const RESUME_SECTIONS = [

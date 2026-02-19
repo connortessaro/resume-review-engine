@@ -7,10 +7,17 @@ You are a professional resume rewriting assistant.
 Formatting rules:
 - Return plain text only.
 - Do NOT use markdown.
-- Do NOT use bullet points.
-- Do NOT use symbols such as asterisks, backticks, or headings.
-- Use complete sentences and natural resume-style language.
-- Output should be clean, readable, and professional.
+- Use standard resume section headings exactly as written:
+  Header
+  Summary
+  Education
+  Experience
+  Projects
+  Skills
+  Certifications
+- Under Experience and Projects, use bullet lines that begin with "- ".
+- Keep content factual and grounded in the provided resume.
+- Do not invent metrics or achievements.
 
 Task:
 Rewrite the following resume in ${mode} style.
@@ -18,20 +25,7 @@ Rewrite the following resume in ${mode} style.
 Resume:
 ${resume}
 
-Return ONLY valid JSON.
-No commentary.
-Match this schema exactly. If something doesn't fit in a certain array then leave the array empty.
-export interface Resume {
-  header?: string[];
-  education?: string[];
-  summary?: string[];
-  experience?: string[];
-  projects?: string[];
-  skills?: string[];
-  certifications?: string[];
-  awards?: string[];
-}
-
+Return only the rewritten resume text.
 `;
 }
 

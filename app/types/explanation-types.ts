@@ -14,7 +14,7 @@ interface ExplanationRules {
   forbidGenericPhrases: boolean;
 }
 
-const EXPLANATION_RULES: Record<RewriteMode, ExplanationRules> = {
+export const EXPLANATION_RULES: Record<RewriteMode, ExplanationRules> = {
   'Action + Project/Problem + Result': {
     minChanges: 3,
     minReasoningPoints: 2,

@@ -22,13 +22,32 @@ export default function Home() {
   const MAX_HISTORY_LENGTH = 10;
 
   useEffect(() => {
-    // Initialize history and make the most recent entry the current one
+    // Initialize history and keep the app resilient to malformed localStorage.
     const storedHistory = localStorage.getItem('rewriteHistory');
-    if (storedHistory) {
-      const parsedEntries: StoredEntry[] = JSON.parse(storedHistory);
-      // eslint-disable-next-line
-      setCurrEntry(parsedEntries?.at(0));
-      setHistory(parsedEntries);
+    if (!storedHistory) return;
+
+    try {
+      const parsedEntries = JSON.parse(storedHistory);
+      if (!Array.isArray(parsedEntries)) return;
+
+      const validEntries = parsedEntries.filter(
+        (entry): entry is StoredEntry =>
+          typeof entry === 'object' &&
+          entry != null &&
+          typeof entry.id === 'number' &&
+          typeof entry.timestamp === 'string' &&
+          typeof entry.mode === 'string',
+      );
+
+      if (validEntries.length === 0) return;
+      const nextHistory = validEntries.slice(0, MAX_HISTORY_LENGTH);
+      const timer = window.setTimeout(() => {
+        setCurrEntry(nextHistory[0]);
+        setHistory(nextHistory);
+      }, 0);
+      return () => window.clearTimeout(timer);
+    } catch {
+      localStorage.removeItem('rewriteHistory');
     }
   }, []);
 
