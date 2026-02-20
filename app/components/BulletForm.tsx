@@ -1,14 +1,16 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import { RewriteEntry } from '@/lib/rewrite-entry';
-import { AsyncState } from '@/lib/async-state';
+import { StoredEntry } from '@/app/types/resume-types';
+import { AsyncState } from '@/app/types/async-state';
 import ModeSelector from './ModeSelector';
 import { createResume } from '@/app/api/resume-actions';
+import { DEFAULT_MODE } from '@/app/types/mode-types';
+import { textToResumeParser } from '@/lib/text-to-resume-parser';
 
 interface BulletFormProps {
   // Called when a new rewrite is successfully created
-  onCreateEntry: (entry: RewriteEntry) => void;
+  onCreateEntry: (entry: StoredEntry) => void;
   // Global async state for the form (idle/loading/error)
   state: AsyncState;
   onState: (state: AsyncState) => void;
@@ -19,7 +21,7 @@ export default function BulletForm({
   state,
   onState,
 }: BulletFormProps) {
-  const [mode, setMode] = useState('ats');
+  const [mode, setMode] = useState(DEFAULT_MODE);
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
   async function handleSubmit(e?: React.FormEvent) {
@@ -27,16 +29,20 @@ export default function BulletForm({
     if (!textAreaRef.current) return;
 
     const text = textAreaRef.current.value.trim();
-    if (!text) return;
+    if (!text) return; // prevent api call when no text
+
+    const originalParsed = textToResumeParser(text);
 
     onState({ type: 'loading' });
     try {
-      const result = await createResume(mode, text);
+      const llmOutput = await createResume(mode, text);
 
-      const entry: RewriteEntry = {
+      const parsedLlmOutput = textToResumeParser(llmOutput);
+
+      const entry: StoredEntry = {
         id: Date.now(),
-        original: text,
-        improved: result,
+        original: originalParsed,
+        improved: parsedLlmOutput,
         mode,
         timestamp: new Date().toISOString(),
       };

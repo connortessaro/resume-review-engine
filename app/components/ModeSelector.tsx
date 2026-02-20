@@ -1,26 +1,22 @@
 'use client';
 
-const MODES = [
-  { id: 'ats', label: 'ATS Optimized' },
-  { id: 'concise', label: 'Concise' },
-  { id: 'impact', label: 'Impact Focused' },
-];
+import { RewriteMode, REWRITE_MODES } from '@/app/types/mode-types';
 
 interface ModeSelectorProps {
-  mode: string;
-  onChange: (mode: string) => void;
+  mode: RewriteMode;
+  onChange: (mode: RewriteMode) => void;
 }
 
 export default function ModeSelector({ mode, onChange }: ModeSelectorProps) {
   return (
     <div className="inline-flex items-center gap-1 rounded-full bg-white/5 p-1 text-[0.7rem]">
-      {MODES.map((m) => {
-        const isActive = m.id === mode;
+      {REWRITE_MODES.map((m) => {
+        const isActive = m === mode;
         return (
           <button
-            key={m.id}
+            key={m}
             type="button"
-            onClick={() => onChange(m.id)}
+            onClick={() => onChange(m)}
             className={[
               'rounded-full px-3 py-1 transition-transform duration-150',
               'focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-1 focus-visible:ring-offset-black',
@@ -29,7 +25,7 @@ export default function ModeSelector({ mode, onChange }: ModeSelectorProps) {
                 : 'bg-transparent text-gray-300 hover:bg-white/10 hover:text-white active:scale-95',
             ].join(' ')}
           >
-            {m.label}
+            {m}
           </button>
         );
       })}

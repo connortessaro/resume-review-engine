@@ -1,20 +1,21 @@
-import { RewriteEntry } from '@/lib/rewrite-entry';
+import { StoredEntry } from '@/app/types/resume-types';
 import { useState, MouseEvent } from 'react';
+import { resumePreview } from '@/lib/copy-btn-formatter';
 
 interface HistorySidebarProps {
-  history: RewriteEntry[];
-  onSelectHistoricalEntry: (entry: RewriteEntry) => void;
+  history: StoredEntry[];
+  onSelectHistoricalEntry: (entry: StoredEntry) => void;
 }
 
 export default function HistorySidebar({
   history,
   onSelectHistoricalEntry,
 }: HistorySidebarProps) {
-  const [selectedEntry, setSelectedEntry] = useState<RewriteEntry>();
+  const [selectedEntry, setSelectedEntry] = useState<StoredEntry>();
 
   const handleButtonClick = (
     e: MouseEvent<HTMLButtonElement>,
-    entry: RewriteEntry,
+    entry: StoredEntry,
   ) => {
     e.stopPropagation();
     setSelectedEntry(entry);
@@ -28,19 +29,18 @@ export default function HistorySidebar({
           History
         </h2>
         <span className="rounded-full bg-white/5 px-2 py-0.5 text-[0.65rem] text-gray-400">
-          {/* Limit to 10 entries; newest at the top (see addEntry in page.tsx) */}
           {history.length}/10
         </span>
       </div>
 
-      <div className="flex-1 space-y-1 overflow-y-auto pt-1 pr-1">
+      <div className="history-scroll flex-1 space-y-1 overflow-y-auto pt-1 pr-1">
         <ul className="max-h-full space-y-1">
           {history.map((entry) => (
             <li
               key={entry.id}
               className="group history-entry rounded-md border border-white/20 bg-white/5 p-2 text-[0.68rem] text-gray-200 shadow-sm transition-[transform,box-shadow,border-color,background-color] duration-150 hover:-translate-y-0.5 hover:border-sky-400/60 hover:bg-white/10 hover:shadow-[0_10px_25px_rgba(15,23,42,0.7)]"
             >
-              <div className="line-clamp-2">{entry.improved.slice(0, 120)}</div>
+              <div className="line-clamp-2">{resumePreview(entry.improved, 120)}</div>
               <div className="mt-1 flex items-center justify-between text-[0.6rem] text-gray-500">
                 <span className="rounded-full bg-black/40 px-2 py-0.5 text-[0.58rem] tracking-[0.16em] uppercase">
                   {entry.mode}

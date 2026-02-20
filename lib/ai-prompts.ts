@@ -1,3 +1,5 @@
+import { Resume } from '@/app/types/resume-types'
+
 export function resumePrompt(mode: string, resume: string) {
   return `
 You are a professional resume rewriting assistant.
@@ -5,22 +7,31 @@ You are a professional resume rewriting assistant.
 Formatting rules:
 - Return plain text only.
 - Do NOT use markdown.
-- Do NOT use bullet points.
-- Do NOT use symbols such as asterisks, backticks, or headings.
-- Use complete sentences and natural resume-style language.
-- Output should be clean, readable, and professional.
+- Use standard resume section headings exactly as written:
+  Header
+  Summary
+  Education
+  Experience
+  Projects
+  Skills
+  Certifications
+- Under Experience and Projects, use bullet lines that begin with "- ".
+- Keep content factual and grounded in the provided resume.
+- Do not invent metrics or achievements.
 
 Task:
 Rewrite the following resume in ${mode} style.
 
 Resume:
 ${resume}
+
+Return only the rewritten resume text.
 `;
 }
 
-export function analysisPrompt(
-  oldResume: { header: string; content: string[] }[],
-  newResume: { header: string; content: string[] }[],
+export function analysisPrompt( // explanation
+  oldResume: Resume,
+  newResume: Resume,
 ) {
 
   const oldR = JSON.stringify(oldResume);

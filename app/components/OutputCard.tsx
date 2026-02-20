@@ -1,17 +1,18 @@
 'use client';
 
-import { AsyncState } from '@/lib/async-state';
+import { AsyncState } from '@/app/types/async-state';
 import { giveExplanation } from '../api/resume-actions';
 import { useRef, useState } from 'react';
-import { RewriteEntry } from '@/lib/rewrite-entry';
+import { StoredEntry } from '@/app/types/resume-types';
 import { useEffect } from 'react';
+import { formatResumeForDisplay } from '@/lib/copy-btn-formatter';
 
 interface OutputCardProps {
-  currEntry: RewriteEntry | undefined;
+  currEntry: StoredEntry | undefined;
   state: AsyncState;
   onState: (state: AsyncState) => void;
-  selectedHistoricalEntry: RewriteEntry | null;
-  onDeselectHistoricalEntry: (entry: RewriteEntry | null) => void;
+  selectedHistoricalEntry: StoredEntry | null;
+  onDeselectHistoricalEntry: (entry: StoredEntry | null) => void;
   onCreateExplanation: (e: string) => void;
 }
 
@@ -23,7 +24,7 @@ export default function OutputCard({
   onDeselectHistoricalEntry,
   onCreateExplanation,
 }: OutputCardProps) {
-  const prevResume = useRef<RewriteEntry | null>(null);
+  const prevResume = useRef<StoredEntry | null>(null);
   const [showOriginal, setShowOriginal] = useState(false);
 
   useEffect(() => {
@@ -33,9 +34,12 @@ export default function OutputCard({
     }
   }, [currEntry, onDeselectHistoricalEntry]);
 
-  const selectedEntry: RewriteEntry =
+  const selectedEntry: StoredEntry =
     selectedHistoricalEntry != null ? selectedHistoricalEntry : currEntry!;
   const explanation = selectedEntry?.explanation ?? '';
+
+  const improvedText = formatResumeForDisplay(selectedEntry.improved);
+  const originalText = formatResumeForDisplay(selectedEntry.original);
 
   if (!currEntry && !selectedHistoricalEntry) {
     return (
@@ -54,13 +58,11 @@ export default function OutputCard({
   async function onButtonClick() {
     try {
       onState({ type: 'loading' });
-      // Generate an explanation for the currently selected entry
-      const explanation = await giveExplanation(
+      const nextExplanation = await giveExplanation(
         selectedEntry.original,
         selectedEntry.improved,
       );
-      // Persist explanation onto the entry in page-level history
-      onCreateExplanation(explanation);
+      onCreateExplanation(nextExplanation);
       onState({ type: 'success' });
     } catch (error) {
       onState({
@@ -75,7 +77,7 @@ export default function OutputCard({
 
   async function handleCopyImproved() {
     try {
-      await navigator.clipboard.writeText(selectedEntry.improved);
+      await navigator.clipboard.writeText(improvedText);
     } catch {
       // swallow copy errors silently
     }
@@ -87,7 +89,7 @@ export default function OutputCard({
         <h2 className="text-sm font-semibold text-gray-50">Results</h2>
         <span className="text-xs text-gray-400">Improved resume</span>
       </header>
-      {/* improved always visible */}
+
       <div className="flex flex-col gap-2 rounded-lg border border-sky-500/40 bg-linear-to-br from-sky-950/60 via-sky-900/40 to-indigo-950/60 p-3 shadow-[0_14px_30px_rgba(8,47,73,0.75)]">
         <div className="flex items-center justify-between">
           <h3 className="text-[0.7rem] font-semibold tracking-[0.16em] text-sky-300 uppercase">
@@ -101,11 +103,11 @@ export default function OutputCard({
             Copy
           </button>
         </div>
-        <pre className="max-h-[260px] overflow-auto text-xs whitespace-pre-wrap text-sky-50">
-          {selectedEntry.improved}
-        </pre>
+        <div className="max-h-[260px] overflow-auto text-xs whitespace-pre-wrap text-sky-50">
+          {improvedText}
+        </div>
       </div>
-      {/* toggle + collapsible original */}
+
       <button
         type="button"
         onClick={() => setShowOriginal((v) => !v)}
@@ -114,16 +116,18 @@ export default function OutputCard({
         <span className="h-1.5 w-1.5 rounded-full bg-sky-400" />
         {showOriginal ? 'Hide original' : 'Show original'}
       </button>
+
       {showOriginal && (
         <div className="flex flex-col gap-2 rounded-lg border border-white/10 bg-black/60 p-3 shadow-sm">
           <h3 className="text-[0.7rem] font-semibold tracking-[0.16em] text-gray-400 uppercase">
             Original
           </h3>
-          <pre className="max-h-[220px] overflow-auto text-xs whitespace-pre-wrap text-gray-200">
-            {selectedEntry.original}
-          </pre>
+          <article className="max-h-[220px] overflow-auto text-xs whitespace-pre-wrap text-gray-200">
+            {originalText}
+          </article>
         </div>
       )}
+
       {state.type === 'loading' ? (
         <button
           type="button"
@@ -134,7 +138,7 @@ export default function OutputCard({
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-sky-300/80 opacity-75" />
             <span className="relative inline-flex h-4 w-4 rounded-full bg-sky-300" />
           </span>
-          Generating…
+          Generating...
         </button>
       ) : (
         <button
@@ -147,15 +151,14 @@ export default function OutputCard({
         </button>
       )}
 
-      {/* explanation output */}
       {explanation && (
         <div className="mt-2 flex flex-col gap-2 rounded-lg border border-emerald-500/40 bg-emerald-800/40 p-3">
           <h3 className="text-[0.7rem] font-semibold tracking-[0.16em] text-emerald-300 uppercase">
             Explanation
           </h3>
-          <pre className="max-h-[220px] overflow-auto text-xs whitespace-pre-wrap text-emerald-50">
+          <div className="max-h-[220px] overflow-auto text-xs whitespace-pre-wrap text-emerald-50">
             {explanation}
-          </pre>
+          </div>
         </div>
       )}
     </section>
